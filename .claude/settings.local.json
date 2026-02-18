@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init:*)",
+      "Bash(git remote:*)",
+      "Bash(git -C:*)",
+      "Bash(git -C /Users/hyun0ray/snake_game status)",
+      "Bash(gh repo edit:*)"
+    ]
+  }
+}

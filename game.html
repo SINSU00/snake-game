@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Snake 🐍</title>
+    <!-- 외부 CSS 파일 연결 -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 게임 전체를 감싸는 컨테이너 -->
+    <div id="gameContainer">
+        <h1>Neon Snake 🐍</h1>
+
+        <!-- 점수판: 현재 점수와 최고 점수 표시 -->
+        <div id="scoreBoard">
+            <div class="score-item">
+                <span>Score:</span>
+                <span id="score">0</span>
+            </div>
+            <div class="score-item">
+                <span>Best:</span>
+                <span id="highScore">0</span>
+            </div>
+            <!-- 현재 선택된 난이도 표시 -->
+            <div class="score-item">
+                <span>Difficulty:</span>
+                <span id="currentDifficulty">Normal</span>
+            </div>
+        </div>
+
+        <!-- 캔버스(게임 화면)를 감싸는 영역 -->
+        <div id="canvasWrapper">
+            <canvas id="gameCanvas"></canvas>
+
+            <!-- 오버레이: 시작 화면, 게임 오버 화면에 사용 -->
+            <div id="overlay">
+                <div id="overlayText">Neon Snake</div>
+
+                <!-- 난이도 선택 버튼 3개 -->
+                <div id="difficultySelector">
+                    <div class="difficulty-label">Difficulty</div>
+                    <div class="difficulty-buttons">
+                        <button class="diff-btn" data-difficulty="easy">Easy</button>
+                        <button class="diff-btn active" data-difficulty="normal">Normal</button>
+                        <button class="diff-btn" data-difficulty="hard">Hard</button>
+                    </div>
+                </div>
+
+                <!-- 벽 통과 모드 토글 -->
+                <div id="wallModeSelector">
+                    <div class="difficulty-label">Wall Pass</div>
+                    <div class="difficulty-buttons">
+                        <button class="wall-btn active" data-wall="off">OFF</button>
+                        <button class="wall-btn" data-wall="on">ON</button>
+                    </div>
+                </div>
+
+                <!-- 뱀 스킨(색상) 선택 -->
+                <div id="skinSelector">
+                    <div class="difficulty-label">Snake Color</div>
+                    <div class="skin-buttons">
+                        <button class="skin-btn active" data-skin="green" style="--skin-color: #00ff41;">Green</button>
+                        <button class="skin-btn" data-skin="blue" style="--skin-color: #41c8ff;">Blue</button>
+                        <button class="skin-btn" data-skin="pink" style="--skin-color: #ff69b4;">Pink</button>
+                        <button class="skin-btn" data-skin="gold" style="--skin-color: #ffd700;">Gold</button>
+                    </div>
+                </div>
+
+                <div id="overlaySubtext">Press Space to Start</div>
+            </div>
+
+            <!-- 일시정지 오버레이 -->
+            <div id="pauseOverlay" class="hidden">
+                <div id="pauseText">PAUSED</div>
+                <div id="pauseSubtext">Press P or ESC to Resume</div>
+            </div>
+
+            <!-- 콤보 텍스트: 연속으로 먹이를 먹으면 표시 -->
+            <div id="comboText"></div>
+
+            <!-- 특수 먹이 안내 텍스트 -->
+            <div id="specialFoodText"></div>
+        </div>
+    </div>
+
+    <!-- 외부 JS 파일 연결 (HTML이 다 로드된 후 실행됨) -->
+    <script src="js/game.js"></script>
+</body>
+</html>

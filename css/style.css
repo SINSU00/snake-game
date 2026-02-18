@@ -1,0 +1,382 @@
+/* ===== 전체 초기화: 브라우저 기본 여백/패딩 제거 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ===== 페이지 전체 배경 및 글꼴 설정 ===== */
+body {
+    font-family: 'Courier New', monospace; /* 레트로 느낌의 고정폭 글꼴 */
+    background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%); /* 어두운 그라디언트 배경 */
+    color: #00ff41; /* 네온 초록색 글자 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 화면 전체 높이 사용 */
+    overflow: hidden; /* 스크롤 숨기기 */
+}
+
+/* ===== 게임 컨테이너: 게임 요소들을 세로로 정렬 ===== */
+#gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* ===== 타이틀 글자: 네온 빛나는 효과 ===== */
+h1 {
+    font-size: 3em;
+    text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41; /* 초록 빛 번짐 효과 */
+    animation: glow 2s ease-in-out infinite alternate; /* 빛이 반짝이는 애니메이션 */
+    margin-bottom: 10px;
+}
+
+/* 타이틀 빛 반짝임 애니메이션 정의 */
+@keyframes glow {
+    from { text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41; }
+    to { text-shadow: 0 0 20px #00ff41, 0 0 40px #00ff41, 0 0 60px #00ff41; }
+}
+
+/* ===== 점수판: 점수와 최고점수를 가로로 배치 ===== */
+#scoreBoard {
+    display: flex;
+    gap: 40px;
+    font-size: 1.5em;
+    text-shadow: 0 0 10px #00ff41;
+    margin-bottom: 10px;
+}
+
+/* 점수판 개별 항목 */
+.score-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ===== 캔버스(게임 화면) 감싸기: 그림자 효과 ===== */
+#canvasWrapper {
+    position: relative; /* 오버레이의 기준점 */
+    box-shadow: 0 0 50px rgba(0, 255, 65, 0.3); /* 초록 빛 그림자 */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* ===== 게임 캔버스: 실제 게임이 그려지는 영역 ===== */
+#gameCanvas {
+    display: block;
+    border: 3px solid #00ff41; /* 초록 테두리 */
+    border-radius: 10px;
+    background: #1a1a2e; /* 어두운 배경 */
+}
+
+/* ===== 오버레이: 게임 위에 반투명하게 덮는 화면 ===== */
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(26, 26, 46, 0.9); /* 반투명 어두운 배경 */
+    backdrop-filter: blur(5px); /* 뒤쪽을 흐리게 */
+    z-index: 10; /* 캔버스 위에 표시 */
+}
+
+/* 오버레이 숨기기 (게임 진행 중) */
+#overlay.hidden {
+    display: none;
+}
+
+/* 오버레이 제목 텍스트 */
+#overlayText {
+    font-size: 2em;
+    text-align: center;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px #00ff41;
+}
+
+/* 오버레이 안내 텍스트 (깜빡이는 효과) */
+#overlaySubtext {
+    font-size: 1.2em;
+    text-shadow: 0 0 10px #00ff41;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 안내 텍스트 깜빡임 애니메이션 */
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* ===== 난이도 선택 영역 ===== */
+#difficultySelector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+/* "난이도 선택" 라벨 텍스트 */
+.difficulty-label {
+    font-size: 1.2em;
+    color: #00ff41;
+    text-shadow: 0 0 10px #00ff41;
+}
+
+/* 난이도 버튼들을 가로로 배치 */
+.difficulty-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* ===== 난이도 버튼 기본 스타일 ===== */
+.diff-btn {
+    padding: 8px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 1em;
+    font-weight: bold;
+    color: #00ff41;
+    background: transparent; /* 투명 배경 */
+    border: 2px solid #00ff41; /* 초록 테두리 */
+    border-radius: 6px;
+    cursor: pointer; /* 마우스 올리면 손가락 모양 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    text-shadow: 0 0 5px #00ff41;
+}
+
+/* 버튼에 마우스를 올렸을 때 */
+.diff-btn:hover {
+    background: rgba(0, 255, 65, 0.15); /* 살짝 초록 배경 */
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.3); /* 빛나는 효과 */
+}
+
+/* ===== 현재 선택된 난이도 버튼 (활성 상태) ===== */
+.diff-btn.active {
+    background: rgba(0, 255, 65, 0.25); /* 더 진한 초록 배경 */
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.5); /* 강한 빛 효과 */
+}
+
+/* 쉬움 버튼: 파란색 테마 */
+.diff-btn[data-difficulty="easy"] {
+    color: #41c8ff;
+    border-color: #41c8ff;
+    text-shadow: 0 0 5px #41c8ff;
+}
+.diff-btn[data-difficulty="easy"]:hover {
+    background: rgba(65, 200, 255, 0.15);
+    box-shadow: 0 0 15px rgba(65, 200, 255, 0.3);
+}
+.diff-btn[data-difficulty="easy"].active {
+    background: rgba(65, 200, 255, 0.25);
+    box-shadow: 0 0 20px rgba(65, 200, 255, 0.5);
+}
+
+/* 어려움 버튼: 빨간색 테마 */
+.diff-btn[data-difficulty="hard"] {
+    color: #ff4141;
+    border-color: #ff4141;
+    text-shadow: 0 0 5px #ff4141;
+}
+.diff-btn[data-difficulty="hard"]:hover {
+    background: rgba(255, 65, 65, 0.15);
+    box-shadow: 0 0 15px rgba(255, 65, 65, 0.3);
+}
+.diff-btn[data-difficulty="hard"].active {
+    background: rgba(255, 65, 65, 0.25);
+    box-shadow: 0 0 20px rgba(255, 65, 65, 0.5);
+}
+
+/* ===== 벽 통과 모드 선택 영역 ===== */
+#wallModeSelector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+/* 벽 통과 모드 버튼 기본 스타일 */
+.wall-btn {
+    padding: 8px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 1em;
+    font-weight: bold;
+    color: #ff8c00; /* 주황색 */
+    background: transparent;
+    border: 2px solid #ff8c00;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px #ff8c00;
+}
+
+/* 벽 통과 버튼 호버 */
+.wall-btn:hover {
+    background: rgba(255, 140, 0, 0.15);
+    box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+}
+
+/* 벽 통과 버튼 활성화 */
+.wall-btn.active {
+    background: rgba(255, 140, 0, 0.25);
+    box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+}
+
+/* ===== 뱀 스킨(색상) 선택 영역 ===== */
+#skinSelector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+/* 스킨 버튼들을 가로로 배치 */
+.skin-buttons {
+    display: flex;
+    gap: 12px;
+}
+
+/* 스킨 버튼 기본 스타일 (CSS 변수로 색상 적용) */
+.skin-btn {
+    padding: 8px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--skin-color); /* 각 버튼의 CSS 변수에서 색상 가져옴 */
+    background: transparent;
+    border: 2px solid var(--skin-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-shadow: 0 0 5px var(--skin-color);
+}
+
+/* 스킨 버튼 호버 */
+.skin-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px var(--skin-color);
+}
+
+/* 스킨 버튼 활성화 */
+.skin-btn.active {
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px var(--skin-color);
+}
+
+/* ===== 일시정지 오버레이 ===== */
+#pauseOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(26, 26, 46, 0.85); /* 반투명 배경 */
+    backdrop-filter: blur(3px);
+    z-index: 15; /* 오버레이보다 위에 표시 */
+}
+
+/* 일시정지 오버레이 숨기기 */
+#pauseOverlay.hidden {
+    display: none;
+}
+
+/* 일시정지 제목 텍스트 */
+#pauseText {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #ffff00; /* 노란색 */
+    text-shadow: 0 0 20px #ffff00, 0 0 40px #ffff00;
+    margin-bottom: 15px;
+    animation: pausePulse 1.5s ease-in-out infinite;
+}
+
+/* 일시정지 안내 텍스트 */
+#pauseSubtext {
+    font-size: 1.2em;
+    color: #ffff00;
+    text-shadow: 0 0 10px #ffff00;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 일시정지 텍스트 깜빡이는 애니메이션 */
+@keyframes pausePulse {
+    0%, 100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* ===== 콤보 텍스트: 연속 먹이 섭취 시 화면에 표시 ===== */
+#comboText {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2em;
+    font-weight: bold;
+    color: #ff00ff; /* 보라색 */
+    text-shadow: 0 0 20px #ff00ff;
+    opacity: 0; /* 기본은 숨김 */
+    transition: opacity 0.3s;
+    pointer-events: none; /* 클릭 방지 */
+}
+
+/* 콤보 텍스트 표시 상태 */
+#comboText.show {
+    opacity: 1;
+    animation: comboFloat 1s ease-out;
+}
+
+/* 콤보 텍스트가 위로 떠오르며 사라지는 애니메이션 */
+@keyframes comboFloat {
+    0% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-10px) scale(1.2); }
+    100% { transform: translateY(-20px) scale(1); opacity: 0; }
+}
+
+/* ===== 특수 먹이 안내 텍스트 ===== */
+#specialFoodText {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #ffd700; /* 금색 */
+    text-shadow: 0 0 15px #ffd700;
+    opacity: 0; /* 기본은 숨김 */
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+/* 특수 먹이 텍스트 표시 상태 */
+#specialFoodText.show {
+    opacity: 1;
+}
+
+/* ===== 모바일 대응: 화면 너비 768px 이하일 때 ===== */
+@media (max-width: 768px) {
+    h1 { font-size: 2em; }
+    #scoreBoard { font-size: 1.2em; gap: 20px; }
+    #overlayText { font-size: 1.5em; }
+    #overlaySubtext { font-size: 1em; }
+    .diff-btn { padding: 6px 14px; font-size: 0.9em; }
+    .wall-btn { padding: 6px 14px; font-size: 0.9em; }
+    .skin-btn { padding: 6px 14px; font-size: 0.9em; }
+    #pauseText { font-size: 2em; }
+    #pauseSubtext { font-size: 1em; }
+    #specialFoodText { font-size: 1em; }
+    #difficultySelector { margin: 10px 0; gap: 8px; }
+    #wallModeSelector { margin: 10px 0; gap: 8px; }
+    #skinSelector { margin: 10px 0; gap: 8px; }
+    .difficulty-label { font-size: 1em; }
+}

@@ -16,7 +16,7 @@
 
 ```
 snake_game/
-├── game.html            # 메인 HTML (진입점)
+├── index.html           # 메인 HTML (진입점, GitHub Pages 배포용)
 ├── css/
 │   └── style.css        # 전체 스타일시트
 ├── js/
@@ -27,7 +27,7 @@ snake_game/
 │   ├── spec.rule.md
 │   ├── responsive.rule.md
 │   └── korean-ui.rule.md
-└── SPECIFICATION.md     # 본 명세서
+└── README.md            # 본 명세서
 ```
 
 ---
@@ -64,7 +64,9 @@ snake_game/
 | 기본 먹이 점수 | 10점 |
 | 콤보 최대 배율 | x5 (최대 50점/먹이) |
 | 황금 먹이 점수 | 50점 x 콤보 배율 |
-| 최고 점수 | localStorage에 영구 저장 |
+| 최고 점수 | 난이도별 독립 저장 (localStorage) |
+
+> 베스트 스코어는 Easy / Normal / Hard 각각 별도로 저장되며, 난이도 선택 시 해당 난이도의 베스트 스코어가 오버레이에 표시된다.
 
 ### 3.5 난이도별 속도 곡선
 
@@ -273,8 +275,12 @@ CELL_SIZE = min(
 - 모바일 미디어 쿼리 (`max-width: 768px`)로 UI 요소 축소
 
 ### 7.7 데이터 저장
-- `localStorage.snakeHighScore`에 최고 점수 영구 저장
+- 난이도별 최고 점수를 각각 독립적으로 localStorage에 영구 저장
+  - `snakeBestScore_easy` — 쉬움 베스트 스코어
+  - `snakeBestScore_normal` — 보통 베스트 스코어
+  - `snakeBestScore_hard` — 어려움 베스트 스코어
 - 페이지 로드 시 자동 복원
+- 난이도 전환 시 해당 난이도의 베스트 스코어를 오버레이 및 점수판에 즉시 반영
 
 ### 7.8 일시정지 시스템
 - `gamePaused` 플래그로 상태 관리
@@ -313,6 +319,7 @@ CELL_SIZE = min(
 ### 9.1 시작/게임오버 오버레이
 - 타이틀 텍스트 / 게임 오버 텍스트
 - 난이도 선택 버튼 (쉬움/보통/어려움)
+- **난이도별 베스트 스코어 표시** (난이도 선택 시 해당 난이도의 베스트 스코어 즉시 표시, 금색)
 - 벽 통과 모드 토글 (끄기/켜기)
 - 뱀 색상 선택 버튼 (초록/블루/핑크/골드)
 - 안내 텍스트 ("스페이스바를 눌러 시작")

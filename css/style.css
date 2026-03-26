@@ -115,6 +115,16 @@ h1 {
     50% { opacity: 1; }
 }
 
+/* ===== 오버레이 난이도별 베스트 스코어 ===== */
+#overlayBestScore {
+    font-size: 1em;
+    color: #ffd700;
+    text-shadow: 0 0 8px #ffd700;
+    margin-top: -8px;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
 /* ===== 난이도 선택 영역 ===== */
 #difficultySelector {
     display: flex;

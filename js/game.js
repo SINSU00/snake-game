@@ -114,7 +114,13 @@ let direction = { x: 1, y: 0 };       // 현재 이동 방향 (오른쪽)
 let nextDirection = { x: 1, y: 0 };   // 다음에 바뀔 방향 (키 입력 시 저장)
 let food = { x: 0, y: 0 };            // 먹이의 좌표
 let score = 0;                         // 현재 점수
-let highScore = parseInt(localStorage.getItem('snakeHighScore')) || 0; // 저장된 최고 점수
+// 난이도별 베스트 스코어를 객체로 관리 (easy, normal, hard 각각 저장)
+const bestScores = {
+    easy:   parseInt(localStorage.getItem('snakeBestScore_easy'))   || 0,
+    normal: parseInt(localStorage.getItem('snakeBestScore_normal')) || 0,
+    hard:   parseInt(localStorage.getItem('snakeBestScore_hard'))   || 0,
+};
+let highScore = bestScores[currentDifficulty]; // 현재 난이도의 최고 점수 (점수판용)
 let gameRunning = false;               // 게임이 진행 중인지 여부
 let gamePaused = false;                // 게임이 일시정지 중인지 여부
 let lastMoveTime = 0;                  // 마지막으로 뱀이 움직인 시간
@@ -264,6 +270,11 @@ diffButtons.forEach(btn => {
 
         // 점수판에 현재 난이도 이름 표시
         currentDifficultyEl.textContent = DIFFICULTY_SETTINGS[currentDifficulty].label;
+
+        // 오버레이에 해당 난이도의 베스트 스코어 표시
+        highScore = bestScores[currentDifficulty];
+        highScoreEl.textContent = highScore;
+        document.getElementById('overlayBestScoreValue').textContent = highScore;
     });
 });
 
@@ -440,11 +451,12 @@ function clearSpecialFood() {
 function updateScore() {
     scoreEl.textContent = score; // 현재 점수를 화면에 표시
 
-    // 현재 점수가 최고 점수보다 높으면 갱신
-    if (score > highScore) {
+    // 현재 점수가 현재 난이도의 최고 점수보다 높으면 갱신
+    if (score > bestScores[currentDifficulty]) {
+        bestScores[currentDifficulty] = score;
         highScore = score;
         highScoreEl.textContent = highScore;
-        localStorage.setItem('snakeHighScore', highScore); // 브라우저에 영구 저장
+        localStorage.setItem('snakeBestScore_' + currentDifficulty, score); // 난이도별로 저장
     }
 }
 
@@ -996,6 +1008,8 @@ canvas.addEventListener('touchend', (e) => {
 // ========================================
 // 초기 설정 및 게임 루프 시작
 // ========================================
+highScore = bestScores[currentDifficulty];                                    // 초기 난이도(normal)의 최고 점수 설정
 highScoreEl.textContent = highScore;                                         // 저장된 최고 점수 표시
+document.getElementById('overlayBestScoreValue').textContent = highScore;   // 오버레이 베스트 스코어 표시
 currentDifficultyEl.textContent = DIFFICULTY_SETTINGS[currentDifficulty].label; // 초기 난이도 표시
 gameLoop(0);                                                                  // 게임 루프 시작!
